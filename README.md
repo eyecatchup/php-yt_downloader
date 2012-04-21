@@ -6,7 +6,11 @@ This class takes a YouTube URL or ID an downloads the original video to your com
 
 ## (Most simple) Example
 
-For a more advanced example see example.php.
+Usage is pretty straight forward: 
+
+ - Create a new instance.
+ - Use the `set_youtube` method to define the video to download.
+ - Use the `do_download` method to download the YouTube video.
 
 ```php
 <?php
@@ -14,15 +18,8 @@ For a more advanced example see example.php.
     try {
         // New download instance.
         $mytube = new yt_downloader();
-
-        /**
-         *  Define the video to download.
-         *  The set_youtube method takes either a YouTube Video-ID, 
-         *  or any YouTube URL (class extracts id, if URL given).
-         */
-        $youtube = "http://www.youtube.com/watch?v=aahOEZKTCzU";
-        $mytube->set_youtube($youtube);
-
+        // Define the video to download.
+        $mytube->set_youtube("http://www.youtube.com/watch?v=aahOEZKTCzU");
         // Download the video (and a preview image).
         $mytube->do_download();
     } 
@@ -30,6 +27,11 @@ For a more advanced example see example.php.
         die($e->getMessage());
     }
 ```
+
+The input string to the `set_youtube` method will be parsed and the class recognizes if it's a YouTube URL, or a YouTube Video-ID. 
+If it's a URL, the ID will be extracted automatically. So, you can provide both: a YouTube Video-ID, or any YouTube URL.
+
+For a more advanced example see example.php.
 
 ## Configuration
 
