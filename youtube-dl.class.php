@@ -7,13 +7,22 @@
  * @author      Stephan Schmitz <eyecatchup@gmail.com>
  * @updated     2012/04/21
  * @copyright	2012-present, Stephan Schmitz
+ * @url         https://github.com/eyecatchup/php-yt_downloader/
  */
-ini_set('max_execution_time', 0);
+
+// Downloading HD Videos may take some time.
+ini_set('max_execution_time', 360);
+// Writing HD Videos to your disk, may need some extra resources.
 ini_set('memory_limit', '64M');
 
+// Include the config interface.
 require('youtube-dl.config.php');
+// Include helper functions for usort.
 require('comparisonfunctions.usort.php');
 
+/**
+ *  yt_downloader Class
+ */
 class yt_downloader implements cnfg
 {
     public function __construct()
