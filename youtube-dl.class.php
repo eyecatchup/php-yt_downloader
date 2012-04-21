@@ -152,12 +152,12 @@ class yt_downloader implements cnfg
                 /**
                  *  PHP doesn't cache information about non-existent files.
                  *  So, if you call file_exists() on a file that doesn't exist, 
-                 *  it will return FALSE until you create the file.
-                 *  So, if you create the file, it will return TRUE - even if 
-                 *  you then delete the file !!! However unlink() clears the 
-                 *  cache automatically. Nevertheless, since we don't know which
-                 *  way the file may have been deleted (if it existed), we clear 
-                 *  the file status cache to ensure a valid file_exists result.
+                 *  it will return FALSE until you create the file. The problem is,
+                 *  that once you've created a file, file_exists() will return TRUE -
+                 *  even if you've deleted the file meanwhile and the cache haven't 
+                 *  been cleared! Even though unlink() clears the cache automatically, 
+                 *  since we don't know which way a file may have been deleted (if it existed),
+                 *  we clear the file status cache to ensure a valid file_exists result.
                  */
                 clearstatcache();
 
