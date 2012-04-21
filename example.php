@@ -1,4 +1,10 @@
 <?php
+/**
+ *  Example Usage:
+ *  http://yourhost.tld/example.php?vid=aahOEZKTCzU
+ *  http://yourhost.tld/example.php?vid=http://www.youtube.com/watch?v=aahOEZKTCzU
+ *  http://yourhost.tld/example.php?vid=https://www.youtube.com/watch?v=aahOEZKTCzU&feature=related
+ */
 if(!isset($_GET["vid"])) { exit("Nope."); }
 else {
     require('youtube-dl.class.php');
