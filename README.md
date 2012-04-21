@@ -14,10 +14,8 @@ Usage is pretty straight forward:
     try {
         // Create a new download instance.
         $mytube = new yt_downloader();
-        // Use the `set_youtube` method to define the video to download.
-        $mytube->set_youtube("http://www.youtube.com/watch?v=aahOEZKTCzU");
-        // Use the `do_download` method to download the YouTube video.
-        $mytube->do_download();
+        // Instantly download a YouTube video (using default settings).
+        $mytube->instant_download("http://www.youtube.com/watch?v=aahOEZKTCzU");
     } 
     catch (Exception $e) {
         die($e->getMessage());

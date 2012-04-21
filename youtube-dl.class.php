@@ -54,6 +54,17 @@ class yt_downloader implements cnfg
     }
 
     /**
+     *  Download instantly  (without changing default settings).
+     *  @access  public
+     *  @return  void
+     */
+    public function instant_download($str) 
+    {
+        self::set_youtube($str);
+        self::do_download();
+    }
+
+    /**
      *  Set the YouTube Video that shall be downloaded.
      *  @access  public
      *  @return  void
