@@ -27,23 +27,19 @@ class yt_downloader implements cnfg
 {
     public function __construct()
     {
+        /**
+         *  Ensure the PHP extensions CURL and JSON are installed.
+         */
         if (!function_exists('curl_init')) {
             throw new Exception('Script requires the PHP CURL extension.');
             exit(0); }
         if (!function_exists('json_decode')) {
             throw new Exception('Script requires the PHP JSON extension.');
             exit(0); }
-			
-        $this->video = false;
-        $this->thumb = false;
-        $this->videoID = false;
-        $this->videoExt = false;
-        $this->videoTitle = false;
-        $this->videoThumb = false;
-        $this->videoQuality = false;
-        $this->videoThumbSize = false;
-        $this->downloadsFolder = false;
 
+        /**
+         *  Required YouTube URLs.
+         */
         $this->YT_BASE_URL = "http://www.youtube.com/";
         $this->YT_INFO_URL = $this->YT_BASE_URL . "get_video_info?video_id=%s&el=embedded&ps=default&eurl=&hl=en_US";
         $this->YT_INFO_ALT = $this->YT_BASE_URL . "oembed?url=%s&format=json";
@@ -51,14 +47,26 @@ class yt_downloader implements cnfg
         $this->YT_THUMB_ALT = "http://i1.ytimg.com/vi/%s/%s.jpg";
 
         $this->CURL_UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko Firefox/11.0";
-		
+
+        /**
+         *  Set default parameters for this download instance.
+         */		
         self::set_defaults();
     }
 	
     public function set_youtube($str)
     {
+        /**
+         *  Parse input string to determine if it's a Youtube URL,
+         *  or an ID. If it's a URL, extract the ID from it.
+         */
         $tmp_id = self::parse_yturl($str);
         $vid_id = ($tmp_id !== false) ? $tmp_id : $str;
+
+        /**
+         *  Check the public video info feed to check if we got a
+         *  valid Youtube ID. If not, throw an exception and exit.
+         */
         $url = sprintf($this->YT_BASE_URL . "watch?v=%s", $vid_id);
         $url = sprintf($this->YT_INFO_ALT, urlencode($url));    
         if(self::curl_httpstatus($url) !== 200) {
@@ -70,9 +78,14 @@ class yt_downloader implements cnfg
     public function do_download()
     {
         $id = self::get_video_id();
+        /**
+         *  If we have a valid Youtube Video Id, try to get the real location 
+         *  and download the video. If not, throw an exception and exit.
+         */
         if($id === false) {
             throw new Exception("Missing video id. Use set_youtube() and try again.");
-            exit(); }
+            exit(); 
+        }
         else {
             $v_info = self::get_yt_info();
             if(self::get_videodata($v_info) === true) 
@@ -175,6 +188,16 @@ class yt_downloader implements cnfg
 	
     private function set_defaults()
     {
+        $this->video = false;
+        $this->thumb = false;
+        $this->videoID = false;
+        $this->videoExt = false;
+        $this->videoTitle = false;
+        $this->videoThumb = false;
+        $this->videoQuality = false;
+        $this->videoThumbSize = false;
+        $this->downloadsFolder = false;
+
         self::set_downloads_dir(cnfg::Download_Folder);
         self::set_thumb_size(cnfg::Default_Thumbsize);
         self::set_video_quality(cnfg::Default_Videoquality);
