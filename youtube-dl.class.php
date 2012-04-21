@@ -11,26 +11,7 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', '64M');
 
 require('youtube-dl.config.php');
-
-function asc_by_quality($value_a, $value_b) 
-{
-	$a = $value_a['pref'];
-	$b = $value_b['pref'];
-	if ($a == $b) {
-		return 0;
-	}
-	return ($a < $b) ? -1 : +1;
-}
-
-function desc_by_quality($value_a, $value_b) 
-{
-	$a = $value_a['pref'];
-	$b = $value_b['pref'];
-	if ($a == $b) {
-		return 0;
-	}
-	return ($a > $b) ? -1 : +1;
-}
+require('comparisonfunctions.usort.php');
 
 class yt_downloader implements cnfg
 {
