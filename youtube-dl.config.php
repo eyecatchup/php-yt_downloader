@@ -5,20 +5,22 @@
   interface cnfg
   {
       /**
-       *  Set directory to save the downloads to.
+       *  Set the directory (relative path to class file)
+       *  where to save the downloads to.
        */
       const Download_Folder = 'videos/';
-
+	
       /**
-       *  Set video quality.
+       *  Set the video quality.
        *  Choose '1' to download videos in the best quality available, 
        *  or '0' for the lowest quality (,thus smallest file size).
        */
       const Default_Videoquality = 0;
-
+	
       /**
-       *  Set thumbnail size.
-       *  Choose one of 'l' (480*360px), or 's' (120*90px).
+       *  Set the video preview image size.
+       *  Choose 'l' (small letter "L") for a size of 480*360px, 
+       *  or 's' for a size of 120*90px.
        */
       const Default_Thumbsize = 'l';
   }
