@@ -25,11 +25,14 @@ require('comparisonfunctions.usort.php');
  */
 class yt_downloader implements cnfg
 {
+    /**
+     *  Class constructor method.
+     *  @access  public
+     *  @return  void
+     */	
     public function __construct()
     {
-        /**
-         *  Ensure the PHP extensions CURL and JSON are installed.
-         */
+        // Ensure the PHP extensions CURL and JSON are installed.
         if (!function_exists('curl_init')) {
             throw new Exception('Script requires the PHP CURL extension.');
             exit(0); }
@@ -37,9 +40,7 @@ class yt_downloader implements cnfg
             throw new Exception('Script requires the PHP JSON extension.');
             exit(0); }
 
-        /**
-         *  Required YouTube URLs.
-         */
+        // Required YouTube URLs.
         $this->YT_BASE_URL = "http://www.youtube.com/";
         $this->YT_INFO_URL = $this->YT_BASE_URL . "get_video_info?video_id=%s&el=embedded&ps=default&eurl=&hl=en_US";
         $this->YT_INFO_ALT = $this->YT_BASE_URL . "oembed?url=%s&format=json";
@@ -48,12 +49,15 @@ class yt_downloader implements cnfg
 
         $this->CURL_UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko Firefox/11.0";
 
-        /**
-         *  Set default parameters for this download instance.
-         */		
+        // Set default parameters for this download instance.		
         self::set_defaults();
     }
-	
+
+    /**
+     *  Set the YouTube Video that shall be downloaded.
+     *  @access  public
+     *  @return  void
+     */	
     public function set_youtube($str)
     {
         /**
@@ -75,23 +79,38 @@ class yt_downloader implements cnfg
         else { self::set_video_id($vid_id); }
     }
 
+    /**
+     *  Try to download the defined YouTube Video.
+     *  @access  public
+     *  @return  integer  Returns (int)0 if download succeded, or (int)1 if 
+     *                    the video already exists on the download directory.
+     */
     public function do_download()
     {
-        $id = self::get_video_id();
         /**
          *  If we have a valid Youtube Video Id, try to get the real location 
          *  and download the video. If not, throw an exception and exit.
          */
+        $id = self::get_video_id();
         if($id === false) {
             throw new Exception("Missing video id. Use set_youtube() and try again.");
             exit(); 
         }
         else {
+            /**
+             *  Try to parse the YouTube Video-Info file to get the video URL map,
+             *  that holds the locations on the YouTube media servers.
+             */
             $v_info = self::get_yt_info();
             if(self::get_videodata($v_info) === true) 
             {
                 $vids = self::get_url_map($v_info);
 
+                /**
+                 *  If extracting the URL map failed, throw an exception
+                 *  and exit. Try to include the original YouTube error
+                 *  - eg "forbidden by country"-message.
+                 */
                 if(!is_array($vids) || sizeof($vids) == 0) {
                     $err_msg = "";
                     if(strpos($v_info, "status=fail") !== false) {
@@ -106,6 +125,9 @@ class yt_downloader implements cnfg
                     exit();
                 }
 
+                /**
+                 *  Format video title and set download and file preferences.
+                 */
                 $title   = self::get_video_title();
                 $quality = self::get_video_quality();
                 $path    = self::get_downloads_dir();
@@ -137,7 +159,12 @@ class yt_downloader implements cnfg
                  *  way the file may have been deleted (if it existed), we clear 
                  *  the file status cache to ensure a valid file_exists result.
                  */
-                clearstatcache(); 
+                clearstatcache();
+
+                /**
+                 *  If the video does not already exist in the download directory,
+                 *  try to download the video and the video preview image.
+                 */
                 if(!file_exists($video)) 
                 {	
                     self::check_thumbs($id);
@@ -168,7 +195,12 @@ class yt_downloader implements cnfg
             }
         }
     }
-	
+
+    /**
+     *  Get filestats for the downloaded video.
+     *  @access  public
+     *  @return  array   Returns an array containing formatted filestats.
+     */	
     public function video_stats()
     {
         $file = self::get_video();
