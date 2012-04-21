@@ -61,3 +61,5 @@ The following options can be set in the youtube-dl.config.php file.
   }
 ```
 
+(c) 2012, Stephan Schmitz <eyecatchup@gmail.com>
+
