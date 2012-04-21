@@ -49,5 +49,6 @@ Use the youtube-dl.config.php file to set your download preferences.
 ```
 
 URL: https://github.com/eyecatchup/php-yt_downloader 
+
 (c) 2012, Stephan Schmitz <eyecatchup@gmail.com>
 
