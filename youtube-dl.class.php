@@ -1,10 +1,11 @@
 <?php
 /**
  * yt_downloader
- * PHP class to retreive the file location of Youtube videos
+ * PHP class to get the file location of Youtube videos
  * and download the source file to a local path.
  *
  * @author      Stephan Schmitz <eyecatchup@gmail.com>
+ * @updated     2012/04/21
  * @copyright	2012-present, Stephan Schmitz
  */
 ini_set('max_execution_time', 0);
@@ -104,11 +105,16 @@ class yt_downloader implements cnfg
                         
                 self::set_video($videoFilename);
 
-                # PHP doesn't cache information about non-existent files.
-                # So, if you call file_exists() on a file that doesn't exist, it will return FALSE until you create the file.
-                # So, if you create the file, it will return TRUE - even if you then delete the file !!!
-                # However unlink() clears the cache automatically. Nevertheless, since we don't know which way the file may 
-                # have been deleted (if it existed), we clear the file status cache to ensure a valid file_exists result.
+                /**
+                 *  PHP doesn't cache information about non-existent files.
+                 *  So, if you call file_exists() on a file that doesn't exist, 
+                 *  it will return FALSE until you create the file.
+                 *  So, if you create the file, it will return TRUE - even if 
+                 *  you then delete the file !!! However unlink() clears the 
+                 *  cache automatically. Nevertheless, since we don't know which
+                 *  way the file may have been deleted (if it existed), we clear 
+                 *  the file status cache to ensure a valid file_exists result.
+                 */
                 clearstatcache(); 
                 if(!file_exists($video)) 
                 {	
@@ -167,20 +173,20 @@ class yt_downloader implements cnfg
 	
     private function parse_yturl($url) 
     {
-        $pattern = '#^(?:https?://)?';		# Optional URL scheme. Either http or https.
-        $pattern .= '(?:www\.)?';		# Optional www subdomain.
-        $pattern .= '(?:'; 			# Group host alternatives:
-        $pattern .=   'youtu\.be/';		#   Either youtu.be,
-        $pattern .=   '|youtube\.com';		#   or youtube.com
-        $pattern .=   '(?:';			# Group path alternatives:
-        $pattern .=     '/embed/';		#   Either /embed/,
-        $pattern .=     '|/v/';			#   or /v/,
-        $pattern .=     '|/watch\?v=';		#   or /watch?v=,	
-        $pattern .=     '|/watch\?.+&v=';	#   or /watch?other_param&v=
-        $pattern .=   ')';			# End path alternatives.
-        $pattern .= ')';			# End host alternatives.
-        $pattern .= '([\w-]{11})';     		# 11 characters (Length of Youtube video ids).
-        $pattern .= '(?:.+)?$#x';     		# Optional other ending URL parameters.
+        $pattern = '#^(?:https?://)?';    # Optional URL scheme. Either http or https.
+        $pattern .= '(?:www\.)?';         #  Optional www subdomain.
+        $pattern .= '(?:';                #  Group host alternatives:
+        $pattern .=   'youtu\.be/';       #    Either youtu.be,
+        $pattern .=   '|youtube\.com';    #    or youtube.com
+        $pattern .=   '(?:';              #    Group path alternatives:
+        $pattern .=     '/embed/';        #      Either /embed/,
+        $pattern .=     '|/v/';           #      or /v/,
+        $pattern .=     '|/watch\?v=';    #      or /watch?v=,	
+        $pattern .=     '|/watch\?.+&v='; #      or /watch?other_param&v=
+        $pattern .=   ')';                #    End path alternatives.
+        $pattern .= ')';                  #  End host alternatives.
+        $pattern .= '([\w-]{11})';        # 11 characters (Length of Youtube video ids).
+        $pattern .= '(?:.+)?$#x';         # Optional other ending URL parameters.
         preg_match($pattern, $url, $matches);
         return (isset($matches[1])) ? $matches[1] : false;
     }
