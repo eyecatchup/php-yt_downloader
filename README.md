@@ -4,23 +4,19 @@
 
 This class takes a YouTube URL or ID an downloads the original video to your computer.
 
-## (Most simple) Example
+## Basic Usage
 
-Usage is pretty straight forward: 
-
- - Create a new instance.
- - Use the `set_youtube` method to define the video to download.
- - Use the `do_download` method to download the YouTube video.
+Usage is pretty straight forward:
 
 ```php
 <?php
     require('youtube-dl.class.php');
     try {
-        // New download instance.
+        // Create a new download instance.
         $mytube = new yt_downloader();
-        // Define the video to download.
+        // Use the `set_youtube` method to define the video to download.
         $mytube->set_youtube("http://www.youtube.com/watch?v=aahOEZKTCzU");
-        // Download the video (and a preview image).
+        // Use the `do_download` method to download the YouTube video.
         $mytube->do_download();
     } 
     catch (Exception $e) {
