@@ -1,4 +1,4 @@
-# yt_downloader: Download videos from YouTube.
+# yt_downloader: PHP class to download videos from YouTube.
 
 ## Introduction
 
