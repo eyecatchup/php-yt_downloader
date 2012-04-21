@@ -171,12 +171,15 @@ class yt_downloader implements cnfg
                     touch($video);
                     chmod($video, 0775);
 
+                    // Download the video.
                     $download = self::curl_get_file($YT_Video_URL, $video);
+
                     if($download === false) {
                         throw new Exception("Saving $videoFilename to $path failed.");
                         exit(); 
                     }
                     else {
+                        // Download the video preview image.
                         $thumb = self::get_video_thumb();
                         if($thumb !== false) 
                         {
@@ -199,7 +202,8 @@ class yt_downloader implements cnfg
     /**
      *  Get filestats for the downloaded video.
      *  @access  public
-     *  @return  array   Returns an array containing formatted filestats.
+     *  @return  mixed   Returns an array containing formatted filestats,
+     *                   or (boolean) false if file doesn't exist.
      */	
     public function video_stats()
     {
@@ -217,7 +221,12 @@ class yt_downloader implements cnfg
         } 
         else { return false; }		
     }
-	
+
+    /**
+     *  Set instance's default download and file preferences.
+     *  @access  private
+     *  @return  void
+     */		
     private function set_defaults()
     {
         $this->video = false;
@@ -234,7 +243,13 @@ class yt_downloader implements cnfg
         self::set_thumb_size(cnfg::Default_Thumbsize);
         self::set_video_quality(cnfg::Default_Videoquality);
     }
-	
+
+    /**
+     *  Check if input string is a valid YouTube URL
+     *  and try to extract the YouTube Video ID from it.
+     *  @access  private
+     *  @return  mixed    Returns YouTube Video ID, or (boolean) false.
+     */		
     private function parse_yturl($url) 
     {
         $pattern = '#^(?:https?://)?';    # Optional URL scheme. Either http or https.
@@ -254,13 +269,25 @@ class yt_downloader implements cnfg
         preg_match($pattern, $url, $matches);
         return (isset($matches[1])) ? $matches[1] : false;
     }
-	
+
+    /**
+     *  Get internal YouTube info for a Video.
+     *  @access  private
+     *  @return  string   Returns video info as string.
+     */		
     private function get_yt_info()
     {
         $url = sprintf($this->YT_INFO_URL, self::get_video_id());	
         return self::curl_get($url);
     }
-	
+
+    /**
+     *  Get the public YouTube Info-Feed for a Video.
+     *  @access  private
+     *  @return  mixed    Returns array, containing the YouTube Video-Title
+     *                    and preview image URL, or (boolean) false
+     *                    if parsing the feed failed.
+     */	
     private function get_public_info()
     {
         $url = sprintf($this->YT_BASE_URL . "watch?v=%s", self::get_video_id());
@@ -275,7 +302,14 @@ class yt_downloader implements cnfg
         } 
         else { return false; }
     }
-	
+
+    /**
+     *  Get formatted video data from the public YouTube Info-Feed.
+     *  @access  private
+     *  @param   string   $str  Info-File contents for a YouTube Video.
+     *  @return  mixed    Returns the formatted YouTube Video-Title as string,
+     *                    or (boolean) false if extracting failed.
+     */		
     private function get_videodata($str)
     {
         $yt_info = $str;
@@ -295,7 +329,14 @@ class yt_downloader implements cnfg
         } 
         else { return false; }
     }
-	
+
+    /**
+     *  Get the URL map for a YouTube Video.
+     *  @access  private
+     *  @param   string   $data  Info-File contents for a YouTube Video.
+     *  @return  mixed    Returns an array, containg the Video URL map,
+     *                    or (boolean) false if extracting failed.
+     */		
     private function get_url_map($data)
     {
         preg_match('/stream_map=(.[^&]*?)&/i',$data,$match);
@@ -340,7 +381,14 @@ class yt_downloader implements cnfg
             return $videos;
         }
     }
-	
+
+    /**
+     *  Get the preview image for a YouTube Video.
+     *  @access  private
+     *  @param   string   $id  Valid YouTube Video-ID.
+     *  @return  mixed    Returns the image URL as string,
+     *                    or (boolean) false if no image found.
+     */	
     private function check_thumbs($id)
     {
         $thumbsize = self::get_thumb_size();
@@ -360,6 +408,12 @@ class yt_downloader implements cnfg
         self::set_video_thumb($th);	
     }
 
+    /**
+     *  Get the YouTube Video Title and format it.
+     *  @access  private
+     *  @param   string   $str  Input string.
+     *  @return  string   Returns cleaned input string.
+     */
     private function formattedVideoTitle($str)
     {
         preg_match_all('#title=(.*?)$#si', urldecode($str), $matches);
@@ -371,6 +425,12 @@ class yt_downloader implements cnfg
         return self::canonicalize($title);
     }
 
+    /**
+     *  Format the YouTube Video Title into a valid filename.
+     *  @access  private
+     *  @param   string   $str  Input string.
+     *  @return  string   Returns cleaned input string.
+     */
     private function canonicalize($str)
     {
         $str = trim($str); # Strip unnecessary characters from the beginning and the end of string.
@@ -388,8 +448,11 @@ class yt_downloader implements cnfg
     }
 
     /**
-     *  Replaces common special entity codes for special character
+     *  Replace common special entity codes for special character
      *  vowels by their equivalent ASCII letter.
+     *  @access  private
+     *  @param   string   $str  Input string.
+     *  @return  string   Returns cleaned input string.
      */
     private function strynonym($str)
     {
@@ -403,7 +466,15 @@ class yt_downloader implements cnfg
         );
         return strtr($str, $SpecialVowels);
     }
-	
+
+    /**
+     *  Check if download directory exists. If not, try to create it.
+     *  @access  private
+     *  @param   string   $dir  Path to the download directory.
+     *  @return  boolean  Returns (boolean) true if directory exists,
+     *                    or was created, or false if creating non-existing
+     *                    directory failed.
+     */	
     private function is_dldir($dir)
     {
         if(is_dir($dir) !== false) {
@@ -413,7 +484,13 @@ class yt_downloader implements cnfg
             return (bool) ! mkdir($dir, 0755);
         }
     }
-	
+
+    /**
+     *  HTTP HEAD request with curl.
+     *  @access  private
+     *  @param   string   $url  String, containing the URL to curl.
+     *  @return  intval   Returns a HTTP status code.
+     */	
     private function curl_httpstatus($url)
     {
         $ch = curl_init($url);
@@ -428,6 +505,12 @@ class yt_downloader implements cnfg
         return intval($int);
     }
 
+    /**
+     *  HTTP GET request with curl.
+     *  @access  private
+     *  @param   string   $url  String, containing the URL to curl.
+     *  @return  string   Returns string, containing the curl result.
+     */
     private function curl_get($url)
     {
         $ch = curl_init($url);
@@ -438,7 +521,15 @@ class yt_downloader implements cnfg
         curl_close ($ch);
         return $contents;
     }
-	
+
+    /**
+     *  HTTP GET request with curl that writes the curl result into a local file.
+     *  @access  private
+     *  @param   string   $remote_file  String, containing the remote file URL to curl.
+     *  @param   string   $local_file   String, containing the path to the file to save 
+     *                                  the curl result in to.
+     *  @return  void
+     */	
     private function curl_get_file($remote_file, $local_file)
     {
         $ch = curl_init($remote_file);
@@ -451,11 +542,13 @@ class yt_downloader implements cnfg
         fclose($fp);
     }	
 
+    // Getter and Setter for the downloaded video.
     public function get_video() {
         return $this->video; }
     private function set_video($video) {
         $this->video = $video; }
 
+    // Getter and Setter for the downloaded video preview image.
     public function get_thumb() {
         return $this->thumb; }
     private function set_thumb($img) {
@@ -465,6 +558,7 @@ class yt_downloader implements cnfg
             throw new Exception("Invalid thumbnail given: $img"); }
     }
 	
+    // Getter and Setter for the YouTube Video-ID.
     public function get_video_id() {
         return $this->videoID; }
     public function set_video_id($id) {
@@ -474,6 +568,7 @@ class yt_downloader implements cnfg
             throw new Exception("$id is not a valid Youtube Video ID."); }
     }
 
+    // Getter and Setter for the formatted video title.
     public function get_video_title() {
         return $this->videoTitle; }
     private function set_video_title($str) {
@@ -482,7 +577,8 @@ class yt_downloader implements cnfg
         } else {
             throw new Exception("Invalid title given: $str"); }
     }
-	
+
+    // Getter and Setter for the video quality.	
     public function get_video_quality() {
         return $this->videoQuality; }
     public function set_video_quality($q) {
@@ -492,11 +588,13 @@ class yt_downloader implements cnfg
             throw new Exception("Invalid video quality.."); }
     }
 	
+    // Getter and Setter for the video preview image.
     public function get_video_thumb() {
         return $this->videoThumb; }
     private function set_video_thumb($img) {
         $this->videoThumb = $img; }
 
+    // Getter and Setter for the video preview image size.
     public function get_thumb_size() {
         return $this->videoThumbSize; }
     public function set_thumb_size($s) {
@@ -508,6 +606,7 @@ class yt_downloader implements cnfg
             throw new Exception("Invalid thumbnail size specified."); }
     }
 	
+    // Getter and Setter for the download directory.
     public function get_downloads_dir() {
         return $this->downloadsFolder; }
     public function set_downloads_dir($dir) {
@@ -516,7 +615,13 @@ class yt_downloader implements cnfg
         } else {
             throw new Exception("Can neither find, nor create download folder: $dir"); }
     }
-		
+
+    /**
+     *  Format file size in bytes into human-readable string.
+     *  @access  public
+     *  @param   string   $bytes   Filesize in bytes.
+     *  @return  string   Returns human-readable formatted filesize.
+     */		
     public function human_bytes($bytes) 
     {
         $fsize = $bytes;
