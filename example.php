@@ -11,9 +11,9 @@ else {
     try 
     {
         $mytube = new yt_downloader();
-        $mytube->set_youtube($_GET["vid"]); # Youtube URL, or Youtube video id.		
+        $mytube->set_youtube($_GET["vid"]); # YouTube URL (or ID) of the video to download.		
 
-        $mytube->set_downloads_dir("downloads/"); # Must have trailing slash!
+        $mytube->set_downloads_dir("downloads/"); # Use trailing slash!
         $mytube->set_video_quality("0");
 	$mytube->set_thumb_size("s");
 
