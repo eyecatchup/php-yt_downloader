@@ -11,14 +11,13 @@ else {
     try 
     {
         $mytube = new yt_downloader();
-        $mytube->set_youtube($_GET["vid"]); # Youtube URL, or Youtube video id.
+        $mytube->set_youtube($_GET["vid"]); # Youtube URL, or Youtube video id.		
 
-        if(isset($_GET["ext"])) {
-            $mytube->set_video_format($_GET["ext"]);
-        }		
+        $mytube->set_downloads_dir("downloads/"); # Must have trailing slash!
+        $mytube->set_video_quality("0");
+	$mytube->set_thumb_size("s");
 
-        $download = $mytube->do_download();
-        
+        $download = $mytube->do_download();       
         if($download == 0 OR $download == 1) 
         {
             $video = $mytube->get_video();
@@ -30,8 +29,7 @@ else {
                 print "<h2><code>$video</code><br>already exists in your your Downloads Folder.</h2>"; 
             }
 
-            $filestats = $mytube->video_stats();
-            
+            $filestats = $mytube->video_stats();           
             if($filestats !== false) {
                 print "<h3>File statistics for <code>$video</code></h3>";
                 print "Filesize: " . $filestats["size"] . "<br>";
@@ -40,11 +38,9 @@ else {
             }
 			
             $path = $mytube->get_downloads_dir();
-
             print "<br><a href='". $path . $video ."' target='_blank'>Click, to open downloaded video.</a>";
 			
             $thumb = $mytube->get_thumb();
-
             clearstatcache();
             if(file_exists($path . $thumb)) {
                 print "<hr><img src=\"". $path . $thumb ."\"><hr>"; }		

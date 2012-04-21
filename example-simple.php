@@ -1,23 +1,10 @@
 <?php
     require('youtube-dl.class.php');
     try {
-        // New instance.
+        // Create a new download instance.
         $mytube = new yt_downloader();
-
-        /**
-         *  Define the video to download.
-         *  The set_youtube method takes either a YouTube Video-ID, 
-         *  or any YouTube URL (class extracts id, if URL given).
-         */
-        $youtube = "http://www.youtube.com/watch?v=aahOEZKTCzU";
-        $mytube->set_youtube($youtube);
-
-        /**
-         *  Start the download.
-         *  Filenames are formatted as: 
-         *  $YT-VideoTitle ."_-_". $Quality ."_-_youtubeid-". $YT-VideoID
-         */
-        $mytube->do_download();
+        // Instantly download a YouTube video (using default settings).
+        $mytube->instant_download("http://www.youtube.com/watch?v=aahOEZKTCzU");
     } 
     catch (Exception $e) {
         die($e->getMessage());
