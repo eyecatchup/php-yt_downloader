@@ -23,9 +23,8 @@ Usage is pretty straight forward:
     }
 ```
 
-The input string to the `instant_download` method will be checked whether it's a YouTube URL, or a YouTube Video-ID. 
-If it's a URL, the ID will be extracted automatically. So, you can provide both: a YouTube URL (as used in the example), or a Youtube Video-ID.
-So, `$mytube->instant_download("aahOEZKTCzU");` is identical to `$mytube->instant_download("http://www.youtube.com/watch?v=aahOEZKTCzU");`.
+You can provide either a YouTube URL (as used in the example), or a Youtube Video-ID. The `instant_download` method will check whether the given  input value is a YouTube URL, or a YouTube Video-ID (as the `set_youtube` method does, too - see example.php). If it's a URL, the ID will be extracted automatically.
+So, `$mytube->instant_download("http://www.youtube.com/watch?v=aahOEZKTCzU");` is identical to `$mytube->instant_download("https://www.youtube.com/watch?feature=related&v=aahOEZKTCzU");` is idetical to `$mytube->instant_download("aahOEZKTCzU");`.
 
 For a more advanced example see example.php.
 
