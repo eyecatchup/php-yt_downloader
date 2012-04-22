@@ -12,10 +12,10 @@
 	
       /**
        *  Set the video quality.
-       *  Choose '1' to download videos in the best quality available, 
-       *  or '0' for the lowest quality (,thus smallest file size).
+       *  Choose '1' (nummeric One) to download videos in the best quality available, 
+       *  or '0' (nummeric Zero) for the lowest quality (,thus smallest file size).
        */
-      const Default_Videoquality = 0;
+      const Default_Videoquality = 1;
 	
       /**
        *  Set the video preview image size.
