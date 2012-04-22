@@ -40,17 +40,6 @@ class yt_downloader implements cnfg
             throw new Exception('Script requires the PHP JSON extension.');
             exit(0); }
 
-        $this->video = false;
-        $this->thumb = false;
-        $this->videoID = false;
-        $this->videoExt = false;
-        $this->videoTitle = false;
-        $this->videoThumb = false;
-
-        $this->videoQuality = false;
-        $this->videoThumbSize = false;
-        $this->downloadsFolder = false;
-
         // Required YouTube URLs.
         $this->YT_BASE_URL = "http://www.youtube.com/";
         $this->YT_INFO_URL = $this->YT_BASE_URL . "get_video_info?video_id=%s&el=embedded&ps=default&eurl=&hl=en_US";
@@ -251,6 +240,17 @@ class yt_downloader implements cnfg
      */		
     private function set_defaults()
     {
+
+        $this->video = false;
+        $this->thumb = false;
+        $this->videoID = false;
+        $this->videoExt = false;
+        $this->videoTitle = false;
+        $this->videoThumb = false;
+        $this->videoQuality = false;
+        $this->videoThumbSize = false;
+        $this->downloadsFolder = false;
+
         self::set_downloads_dir(cnfg::Download_Folder);
         self::set_thumb_size(cnfg::Default_Thumbsize);
         self::set_video_quality(cnfg::Default_Videoquality);
@@ -490,6 +490,7 @@ class yt_downloader implements cnfg
     private function is_dldir($dir)
     {
         if(is_dir($dir) !== false) {
+            chmod($video, 0777); # Ensure permissions. Otherwise CURLOPT_FILE will fail!
             return true;
         } 
         else {
