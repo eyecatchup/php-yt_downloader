@@ -490,7 +490,7 @@ class yt_downloader implements cnfg
     private function is_dldir($dir)
     {
         if(is_dir($dir) !== false) {
-            chmod($video, 0777); # Ensure permissions. Otherwise CURLOPT_FILE will fail!
+            chmod($dir, 0777); # Ensure permissions. Otherwise CURLOPT_FILE will fail!
             return true;
         } 
         else {
