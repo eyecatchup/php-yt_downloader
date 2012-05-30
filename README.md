@@ -39,5 +39,6 @@ For more (advanced) examples see the example-*.php files.
 
 Use the youtube-dl.config.php file to set your download preferences.
 
-(c) 2012, Stephan Schmitz <eyecatchup@gmail.com>,
-URL: https://github.com/eyecatchup/php-yt_downloader
+URL: https://github.com/eyecatchup/php-yt_downloader/      
+License: http://eyecatchup.mit-license.org/     
+(c) 2012, Stephan Schmitz <eyecatchup@gmail.com>   
