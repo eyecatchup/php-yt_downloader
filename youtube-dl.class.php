@@ -6,7 +6,7 @@
  *  ================================================================================
  *  @category
  *  @package     yt_downloader
- *  @version     CVS: $Id: youtube-dl.class.php,v1.0.1 2012/05/30 12:22:17 ssc Exp $
+ *  @version     CVS: $Id: youtube-dl.class.php,v1.0.1 2012/05/30 13:04:01 ssc Exp $
  *  @author      Stephan Schmitz <eyecatchup@gmail.com>
  *  @copyright   2012 - present, Stephan Schmitz
  *  @license     http://eyecatchup.mit-license.org
