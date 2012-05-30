@@ -5,6 +5,11 @@
 This PHP class takes a YouTube URL (or YouTube Video-ID) and downloads the video to your computer.
 Optionally, you can convert any YouTube video to an MP3 Audio file (requires ffmpeg to be installed!).
 
+## Download
+
+The latest stable version can be downloaded from the downloads tab, or using the following link:
+https://github.com/downloads/eyecatchup/php-yt_downloader/eyecatchup-php-yt_downloader-403c053.zip
+
 ## Basic Usage
 
 Usage is pretty straight forward:
