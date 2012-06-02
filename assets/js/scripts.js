@@ -107,7 +107,7 @@ $(document).ready(function() {
     return false;
   });
   function alertDemo() {
-    alert('Sorry, the download functionality is disabled for this demo version (since we cannot run PHP code here).');
+    alert('Since we cannot run PHP code here, the download functionality is disabled for this demo version. \n\nNote: You can find the source code of this demo in the gh-pages branch.');
   }
 
 /**
