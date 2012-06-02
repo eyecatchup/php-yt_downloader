@@ -107,7 +107,7 @@ $(document).ready(function() {
     return false;
   });
   function alertDemo() {
-    alert('Sorry, the download functionality is disabled for this demo version \n(since we cannot run PHP code here).');
+    alert('Sorry, the download functionality is disabled for this demo version (since we cannot run PHP code here).');
   }
 
 /**
