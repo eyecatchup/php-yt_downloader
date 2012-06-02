@@ -6,9 +6,14 @@ $(document).ready(function() {
 /**
  *  If request parameter 'vid' is set, set as value for input field.
  */
-  for(var a, b=/\+/g, c=/([^&=]+)=?([^&]*)/g, d=window.location.search.substring(1); a=c.exec(d);) a[1].replace(b," "), a[2].replace(b," ");
-  if ("vid" in a) {
-    $('#ytUrl').val(decodeURIComponent(a["vid"]));
+  var urlParams = {};
+  (function() {
+    for(var a, b = /\+/g, c = /([^&=]+)=?([^&]*)/g, d = window.location.search.substring(1);a = c.exec(d);) {
+      urlParams[unescape(a[1].replace(b, " "))] = unescape(a[2].replace(b, " "))
+    }
+  })();
+  if ("vid" in urlParams) {
+    $('#ytUrl').val(decodeURIComponent(urlParams["vid"]));
   }
 /**
  *  AJAX call that submits a new download request.
@@ -91,7 +96,7 @@ $(document).ready(function() {
               '<strong>Video</strong>: Download the video file.<br />' +
               '<strong>Audio</strong>: Convert video and download soundtrack as mp3 file.',
             'buttons' : {
-			  // Disabled for GitHub demo, since we can not run scripts.
+              // Disabled for GitHub demo, since we can not run scripts.
               //'Audio' : {'class' : 'blue', 'action': function() { do_download("audio"); }},
               //'Video' : {'class' : 'red', 'action': function() { do_download("video"); }}
               'Audio' : {'class' : 'blue', 'action': function() { alertDemo(); }},
@@ -102,7 +107,7 @@ $(document).ready(function() {
     return false;
   });
   function alertDemo() {
-	alert('Sorry, the download functionality is disabled for this demo version.');
+    alert('Sorry, the download functionality is disabled for this demo version.');
   }
 
 /**
