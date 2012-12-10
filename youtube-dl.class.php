@@ -6,7 +6,7 @@
  *  ================================================================================
  *  @category
  *  @package     yt_downloader
- *  @version     CVS: $Id: youtube-dl.class.php,v1.0.1 2012/05/30 13:04:01 ssc Exp $
+ *  @version     CVS: $Id: youtube-dl.class.php,v1.0.2 2012/12/10 01:49:01 ssc Exp $
  *  @author      Stephan Schmitz <eyecatchup@gmail.com>
  *  @copyright   2012 - present, Stephan Schmitz
  *  @license     http://eyecatchup.mit-license.org
@@ -506,10 +506,10 @@ class yt_downloader implements cnfg
             $tmp = array();
 
             foreach($urls as $url) {
-                if(preg_match('/url=(.*?)&.*?itag=([0-9]+)/si',$url,$um))
+                if(preg_match('/itag=([0-9]+)&url=(.*?)&.*?/si',$url,$um))
                 {
-                    $u = urldecode($um[1]);
-                    $tmp[$um[2]] = $u;
+                    $u = urldecode($um[2]);
+                    $tmp[$um[1]] = $u;
                 }
             }
 
