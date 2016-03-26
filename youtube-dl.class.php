@@ -659,8 +659,11 @@ class yt_downloader implements cnfg
      */
     private function has_ffmpeg()
     {
-        $sh = `which ffmpeg`;
-        return (bool) (strlen(trim($sh)) > 0);
+        // check if ffmpeg is installed using returnVariable on help command
+        $returnVar = false;
+        $out = array();
+        exec('ffmpeg -h', $out, $returnVar);
+        return $returnVar === 0;
     }
 
     /**
