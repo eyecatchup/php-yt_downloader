@@ -469,7 +469,8 @@ class yt_downloader implements cnfg
         $pb_info = self::get_public_info();
 
         if($pb_info !== FALSE) {
-            $htmlTitle = htmlentities(utf8_decode($pb_info["title"]));
+            //https://github.com/eyecatchup/php-yt_downloader/issues/10#issuecomment-117083347
+            $htmlTitle = htmlentities(utf8_decode($pb_info["title"]), ENT_QUOTES | ENT_IGNORE, "UTF-8");
             $videoTitle = self::canonicalize($htmlTitle);
         }
         else {
@@ -492,6 +493,9 @@ class yt_downloader implements cnfg
      */
     private function get_url_map($data)
     {
+        //https://github.com/eyecatchup/php-yt_downloader/issues/7
+        $videos = false;
+        
         preg_match('/stream_map=(.[^&]*?)&/i',$data,$match);
         if(!isset($match[1])) {
             return FALSE;
@@ -505,11 +509,18 @@ class yt_downloader implements cnfg
             $urls = explode(',',$fmt_url);
             $tmp = array();
 
+            //https://github.com/eyecatchup/php-yt_downloader/issues/10#issuecomment-147021789
             foreach($urls as $url) {
-                if(preg_match('/itag=([0-9]+)&url=(.*?)&.*?/si',$url,$um))
-                {
-                    $u = urldecode($um[2]);
-                    $tmp[$um[1]] = $u;
+                $lines = explode('&',$url);
+                $num = '';
+                $url = '';
+                foreach($lines as $u){
+                    $num = ((empty($num)) && (preg_match("/itag=/i",$u))) ? str_replace("itag=","",$u):$num;
+                    $url = ((empty($url)) && (preg_match("/url=/i",$u))) ? str_replace("url=","",$u):$url;
+                    if((!empty($url)) && ((!empty($num)))){
+                        $tmp[$num] = urldecode($url);
+                        break;
+                    }
                 }
             }
 
@@ -573,7 +584,8 @@ class yt_downloader implements cnfg
 
         $title = explode("&", $matches[1][0]);
         $title = $title[0];
-        $title = htmlentities(utf8_decode($title));
+        //https://github.com/eyecatchup/php-yt_downloader/issues/10#issuecomment-117083347
+        $title = htmlentities(utf8_decode($title), ENT_QUOTES | ENT_IGNORE, "UTF-8");
 
         return self::canonicalize($title);
     }
@@ -647,8 +659,11 @@ class yt_downloader implements cnfg
      */
     private function has_ffmpeg()
     {
-        $sh = `which ffmpeg`;
-        return (bool) (strlen(trim($sh)) > 0);
+        // check if ffmpeg is installed using returnVariable on help command
+        $returnVar = false;
+        $out = array();
+        exec('ffmpeg -h', $out, $returnVar);
+        return $returnVar === 0;
     }
 
     /**
