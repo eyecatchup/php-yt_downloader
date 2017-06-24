@@ -506,10 +506,10 @@ class yt_downloader implements cnfg
             $tmp = array();
 
             foreach($urls as $url) {
-                if(preg_match('/itag=([0-9]+)&url=(.*?)&.*?/si',$url,$um))
-                {
-                    $u = urldecode($um[2]);
-                    $tmp[$um[1]] = $u;
+                if(preg_match('/url=(.*?)&.*?itag=([0-9]+)/si',$url,$um)) { 
+                    $u = urldecode($um[1]); $tmp[$um[2]] = $u;
+                } else if (preg_match('/itag=([0-9]+)&.*url=(.*)/si',$url, $um)) { 
+                    $u = urldecode($um[2]); $tmp[$um[1]] = $u; 
                 }
             }
 
