@@ -6,8 +6,14 @@ else {
     try
     {
         $mytube = new yt_downloader();
-
-        $mytube->set_youtube($_GET["vid"]);     # YouTube URL (or ID) of the video to download.
+		
+        //Fixing shorted yt url result in error
+		$yt_url = $_GET["vid"];
+		if(str_pos("youtu.be", $yt_url) !== false) {
+			$yt_url = preg_replace('~^https?://youtu\.be/([a-z\d]+)$~i', 'http://www.youtube.com/watch?v=$1', $yt_url);
+		}
+		
+        $mytube->set_youtube($yt_url);     # YouTube URL (or ID) of the video to download.
         $mytube->set_video_quality(1);          # Change default output video file quality.
         $mytube->set_thumb_size('l');           # Change default video preview image size.
         $mytube->set_ffmpegLogs_active(FALSE);
